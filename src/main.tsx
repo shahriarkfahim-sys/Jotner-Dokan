@@ -6,7 +6,9 @@ import { seedDatabase } from './seed.ts';
 
 // Seed database in dev mode
 if (process.env.NODE_ENV !== 'production') {
-  seedDatabase();
+  seedDatabase().catch((error) => {
+    console.warn('Skipping database seed:', error);
+  });
 }
 
 createRoot(document.getElementById('root')!).render(

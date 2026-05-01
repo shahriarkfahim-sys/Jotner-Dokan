@@ -17,18 +17,22 @@ export default function ProductCard({ product }: { product: Product, key?: React
 
   useEffect(() => {
     async function load() {
-      if (user) {
-        const wishlistId = `${user.uid}_${product.id}`;
-        const docRef = doc(db, 'wishlists', wishlistId);
-        const snap = await getDoc(docRef);
-        setIsWishlisted(snap.exists());
-      }
-      
-      if (product.artisanId) {
-        const artisanSnap = await getDoc(doc(db, 'artisans', product.artisanId));
-        if (artisanSnap.exists()) {
-          setArtisanName(artisanSnap.data().name);
+      try {
+        if (user) {
+          const wishlistId = `${user.uid}_${product.id}`;
+          const docRef = doc(db, 'wishlists', wishlistId);
+          const snap = await getDoc(docRef);
+          setIsWishlisted(snap.exists());
         }
+
+        if (product.artisanId) {
+          const artisanSnap = await getDoc(doc(db, 'artisans', product.artisanId));
+          if (artisanSnap.exists()) {
+            setArtisanName(artisanSnap.data().name);
+          }
+        }
+      } catch (error) {
+        console.warn('Skipping product metadata lookup:', error);
       }
     }
     load();

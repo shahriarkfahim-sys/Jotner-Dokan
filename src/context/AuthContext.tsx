@@ -53,7 +53,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
             setProfile(userDoc.data() as UserProfile);
           }
         } catch (error) {
-          handleFirestoreError(error, OperationType.GET, `users/${user.uid}`);
+          console.warn('Could not load user profile:', error);
+          setProfile(null);
         }
       } else {
         setProfile(null);

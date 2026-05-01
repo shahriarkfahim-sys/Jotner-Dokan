@@ -31,9 +31,9 @@ export default function Footer({ id }: { id?: string }) {
           <div>
             <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6 font-sans">Community</h4>
             <ul className="space-y-4 text-sm font-medium text-slate-600">
-              <li><Link to="/stories" className="hover:text-brand-primary transition-colors">Artisan Stories</Link></li>
+              <li><Link to="/stories" className="hover:text-brand-primary transition-colors">Our Story</Link></li>
+              <li><Link to="/voices" className="hover:text-brand-primary transition-colors">Artisan&apos;s Story</Link></li>
               <li><Link to="/loyalty" className="hover:text-brand-primary transition-colors">Partnerships</Link></li>
-              <li><Link to="/blog" className="hover:text-brand-primary transition-colors">Impact Updates</Link></li>
               <li><Link to="/contact" className="hover:text-brand-primary transition-colors">Contact</Link></li>
             </ul>
           </div>

@@ -20,7 +20,7 @@ export default function Navbar({ id }: { id?: string }) {
           {/* Desktop Nav */}
           <div className="hidden md:flex items-center space-x-8">
             <Link to="/shop" className="text-sm font-medium text-slate-500 hover:text-brand-primary transition-colors">Market</Link>
-            <Link to="/stories" className="text-sm font-medium text-slate-500 hover:text-brand-primary transition-colors">Artisans</Link>
+            <Link to="/voices" className="text-sm font-medium text-slate-500 hover:text-brand-primary transition-colors">Artisan&apos;s Story</Link>
             <Link to="/stories" className="text-sm font-medium text-slate-500 hover:text-brand-primary transition-colors">Stories</Link>
             
             {user && (
@@ -85,7 +85,8 @@ export default function Navbar({ id }: { id?: string }) {
           >
             <div className="px-4 pt-2 pb-6 space-y-4">
               <Link to="/shop" className="block text-lg font-serif">Shop All Crafts</Link>
-              <Link to="/stories" className="block text-lg font-serif">Artisan Stories</Link>
+              <Link to="/stories" className="block text-lg font-serif">Stories</Link>
+              <Link to="/voices" className="block text-lg font-serif">Artisan&apos;s Story</Link>
               <Link to="/wishlist" className="block text-lg font-serif">My Wishlist</Link>
               <Link to="/profile" className="block text-lg font-serif">My Account</Link>
               <div className="pt-4">

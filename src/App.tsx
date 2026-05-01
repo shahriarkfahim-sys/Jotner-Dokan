@@ -13,6 +13,7 @@ import Home from './pages/Home';
 import Shop from './pages/Shop';
 import ProductDetails from './pages/ProductDetails';
 import ArtisanStories from './pages/ArtisanStories';
+import OurStory from './pages/OurStory';
 import Profile from './pages/Profile';
 import Cart from './pages/Cart';
 import Wishlist from './pages/Wishlist';
@@ -33,7 +34,10 @@ export default function App() {
                   <Route path="/" element={<Home id="home-page" />} />
                   <Route path="/shop" element={<Shop id="shop-page" />} />
                   <Route path="/product/:id" element={<ProductDetails id="product-details" />} />
-                  <Route path="/stories" element={<ArtisanStories id="stories-page" />} />
+                  <Route path="/stories" element={<OurStory id="our-story-page" />} />
+                  <Route path="/our-story" element={<OurStory id="our-story-page" />} />
+                  <Route path="/voices" element={<ArtisanStories id="stories-page" />} />
+                  <Route path="/artisan-stories" element={<ArtisanStories id="stories-page" />} />
                   <Route path="/profile" element={<Profile id="profile-page" />} />
                   <Route path="/cart" element={<Cart id="cart-page" />} />
                   <Route path="/wishlist" element={<Wishlist id="wishlist-page" />} />
@@ -50,4 +54,3 @@ export default function App() {
     </AuthProvider>
   );
 }
-

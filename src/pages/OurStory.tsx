@@ -99,7 +99,7 @@ export default function OurStory({ id }: { id?: string }) {
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.8fr_1.2fr]">
             <div>
               <p className="mb-3 text-4xl font-black leading-tight text-slate-950 md:text-5xl">Why We Began</p>
-              <h2 className="text-4xl font-black leading-tight md:text-5xl">We did not start with a product.</h2>
+              <h2 className="text-4xl font-medium leading-tight md:text-5xl">We did not start with a product.</h2>
             </div>
             <div className="space-y-6 text-lg leading-8 text-slate-700">
               <p>

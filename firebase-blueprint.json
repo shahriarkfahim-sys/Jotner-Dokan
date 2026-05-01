@@ -1,0 +1,145 @@
+{
+  "entities": {
+    "ArtisanProfile": {
+      "title": "Artisan Profile",
+      "description": "Profile data for local artisans including biome and disability context.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "bio": { "type": "string" },
+        "story": { "type": "string" },
+        "avatarUrl": { "type": "string" },
+        "location": { "type": "string" },
+        "specialties": { "type": "array" },
+        "disabilityInfo": { "type": "string" },
+        "socialLinks": { "type": "object" },
+        "artisanId": { "type": "string" }
+      },
+      "required": ["name", "bio", "story", "artisanId"]
+    },
+    "Product": {
+      "title": "Craft Product",
+      "description": "Details of handmade products sold on the platform.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string" },
+        "description": { "type": "string" },
+        "price": { "type": "number" },
+        "category": { "type": "string" },
+        "tags": { "type": "array" },
+        "images": { "type": "array" },
+        "stock": { "type": "number" },
+        "artisanId": { "type": "string" },
+        "rating": { "type": "number" },
+        "reviewCount": { "type": "number" },
+        "isFeatured": { "type": "boolean" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["name", "description", "price", "category", "artisanId", "createdAt"]
+    },
+    "Review": {
+      "title": "Product Review",
+      "description": "User reviews and ratings for products.",
+      "type": "object",
+      "properties": {
+        "productId": { "type": "string" },
+        "userId": { "type": "string" },
+        "userName": { "type": "string" },
+        "rating": { "type": "number" },
+        "comment": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["productId", "userId", "rating", "createdAt"]
+    },
+    "BlogPost": {
+      "title": "Blog Post",
+      "description": "Stories and updates from artisans and the community.",
+      "type": "object",
+      "properties": {
+        "title": { "type": "string" },
+        "content": { "type": "string" },
+        "artisanId": { "type": "string" },
+        "authorName": { "type": "string" },
+        "coverImage": { "type": "string" },
+        "tags": { "type": "array" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["title", "content", "authorName", "createdAt"]
+    },
+    "User": {
+      "title": "User Account",
+      "description": "User profile data including loyalty points and preferences.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string" },
+        "email": { "type": "string" },
+        "displayName": { "type": "string" },
+        "photoURL": { "type": "string" },
+        "role": { "type": "string", "enum": ["customer", "artisan", "admin"] },
+        "loyaltyPoints": { "type": "number" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["uid", "email", "role", "createdAt"]
+    },
+    "Order": {
+      "title": "Customer Order",
+      "description": "Records of purchases and shipping status.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "items": { "type": "array" },
+        "totalAmount": { "type": "number" },
+        "status": { "type": "string", "enum": ["pending", "processing", "shipped", "delivered", "cancelled"] },
+        "shippingAddress": { "type": "object" },
+        "trackingNumber": { "type": "string" },
+        "createdAt": { "type": "number" }
+      },
+      "required": ["userId", "items", "totalAmount", "status", "shippingAddress", "createdAt"]
+    },
+    "Wishlist": {
+      "title": "User Wishlist",
+      "description": "Saved products for later viewing.",
+      "type": "object",
+      "properties": {
+        "userId": { "type": "string" },
+        "productId": { "type": "string" },
+        "addedAt": { "type": "number" }
+      },
+      "required": ["userId", "productId", "addedAt"]
+    }
+  },
+  "firestore": {
+    "/artisans/{artisanId}": {
+      "schema": "ArtisanProfile",
+      "description": "Collection of artisan profiles."
+    },
+    "/products/{productId}": {
+      "schema": "Product",
+      "description": "Collection of handmade products."
+    },
+    "/products/{productId}/reviews/{reviewId}": {
+      "schema": "Review",
+      "description": "Sub-collection of reviews for a specific product."
+    },
+    "/blog_posts/{postId}": {
+      "schema": "BlogPost",
+      "description": "Collection of storytelling blog posts."
+    },
+    "/users/{userId}": {
+      "schema": "User",
+      "description": "Collection of user account data."
+    },
+    "/orders/{orderId}": {
+      "schema": "Order",
+      "description": "Collection of customer orders."
+    },
+    "/wishlists/{wishlistId}": {
+      "schema": "Wishlist",
+      "description": "Collection of wishlist items. wishlistId is usually userId_productId."
+    },
+    "/admins/{adminId}": {
+      "schema": { "type": "object", "properties": { "uid": { "type": "string" } } },
+      "description": "List of user UIDs with administrative privileges."
+    }
+  }
+}

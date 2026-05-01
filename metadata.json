@@ -1,0 +1,6 @@
+{
+  "name": "InclusiveCrafts",
+  "description": "An e-commerce marketplace for handmade crafts from local artisans with disabilities, featuring secure payments, artisan storytelling, and AI-powered recommendations.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["E-commerce", "AI Recommendations", "Artisan Profiles", "Real-time Tracking"]
+}

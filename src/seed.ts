@@ -1,5 +1,5 @@
-import { collection, addDoc, getDocs, deleteDoc } from 'firebase/firestore';
-import { db } from './src/lib/firebase';
+import { collection, addDoc, getDocs } from 'firebase/firestore';
+import { db } from './lib/firebase';
 
 const artisans = [
   {

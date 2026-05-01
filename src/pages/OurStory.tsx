@@ -46,13 +46,9 @@ export default function OurStory({ id }: { id?: string }) {
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.7 }}
           >
-            <p className="mb-4 text-xs font-black uppercase tracking-[0.3em] text-brand-primary">Our Story</p>
             <h1 className="max-w-3xl text-5xl font-black leading-tight text-slate-950 md:text-7xl">
-              When opportunity is created, people include themselves.
+              Our Story
             </h1>
-            <p className="mt-8 max-w-xl text-lg leading-relaxed text-slate-600">
-              Jotner Dokan began with a simple belief: people do not need sympathy. They need opportunity, income, ownership, and a market that values what they can create.
-            </p>
           </motion.div>
 
           <motion.div
@@ -98,14 +94,14 @@ export default function OurStory({ id }: { id?: string }) {
         </div>
       </section>
 
-      <section className="bg-slate-950 py-20 text-white">
+      <section className="bg-brand-bg py-20 text-slate-950">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 gap-10 lg:grid-cols-[0.8fr_1.2fr]">
             <div>
-              <p className="mb-3 text-xs font-black uppercase tracking-[0.3em] text-brand-primary">Why We Began</p>
+              <p className="mb-3 text-4xl font-black leading-tight text-slate-950 md:text-5xl">Why We Began</p>
               <h2 className="text-4xl font-black leading-tight md:text-5xl">We did not start with a product.</h2>
             </div>
-            <div className="space-y-6 text-lg leading-8 text-slate-300">
+            <div className="space-y-6 text-lg leading-8 text-slate-700">
               <p>
                 We started with a belief: people do not need sympathy. They need opportunity.
               </p>
@@ -116,7 +112,7 @@ export default function OurStory({ id }: { id?: string }) {
               </p>
               <p>
                 And income changed something deeper. The same mother who once hesitated now says,
-                <em className="text-white"> “My daughter earns.”</em> That sentence carries more than pride. It carries a
+                <em className="text-slate-950"> “My daughter earns.”</em> That sentence carries more than pride. It carries a
                 shift in identity, confidence, and how society responds.
               </p>
             </div>

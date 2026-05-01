@@ -8,6 +8,7 @@ import { motion, AnimatePresence } from 'motion/react';
 import ProductCard from '../components/ProductCard';
 
 const formatTk = (amount: number) => `Tk ${amount.toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const LOCAL_ORDERS_KEY = 'jotnerLocalOrders';
 
 export default function Profile({ id }: { id?: string }) {
   const { user, profile, logout, signIn } = useAuth();
@@ -27,6 +28,8 @@ export default function Profile({ id }: { id?: string }) {
 
   useEffect(() => {
     if (!user) {
+      const localOrders = JSON.parse(localStorage.getItem(LOCAL_ORDERS_KEY) || '[]') as Order[];
+      setOrders(localOrders);
       setLoading(false);
       return;
     }
@@ -63,7 +66,7 @@ export default function Profile({ id }: { id?: string }) {
     loadData();
   }, [user]);
 
-  if (!user && !loading) {
+  if (!user && !loading && orders.length === 0 && !orderNotice) {
     return (
       <div id={id} className="pt-40 pb-20 text-center px-4 bg-brand-bg min-h-screen">
         <div className="max-w-md mx-auto bg-white p-12 rounded-3xl shadow-xl shadow-slate-100 border border-slate-100">
@@ -72,7 +75,7 @@ export default function Profile({ id }: { id?: string }) {
           </div>
           <h2 className="text-3xl font-bold tracking-tight text-slate-900 mb-4">Welcome Back</h2>
           <p className="text-slate-500 mb-10 text-sm leading-relaxed">
-            Sign in to access your curated wishlist, track artisan crafts, and manage your personal collection.
+            Sign in to access your curated wishlist and sync order tracking to your account. Local checkout also works without sign-in.
           </p>
           <button onClick={signIn} className="btn-olive w-full py-4 text-sm font-bold shadow-xl shadow-brand-primary/20">
             Sign In with Google
@@ -92,11 +95,17 @@ export default function Profile({ id }: { id?: string }) {
           <aside className="md:w-64 space-y-3">
             <div className="bg-white p-6 rounded-2xl shadow-sm border border-slate-100 mb-8 text-center">
               <div className="w-20 h-20 rounded-full bg-slate-100 mx-auto mb-4 overflow-hidden border-2 border-white shadow-md">
-                <img src={user?.photoURL || ''} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                {user?.photoURL ? (
+                  <img src={user.photoURL} alt="" className="w-full h-full object-cover" referrerPolicy="no-referrer" />
+                ) : (
+                  <div className="flex h-full w-full items-center justify-center text-brand-primary">
+                    <UserIcon size={28} />
+                  </div>
+                )}
               </div>
-              <h3 className="font-bold text-slate-900">{user?.displayName}</h3>
+              <h3 className="font-bold text-slate-900">{user?.displayName || 'Local Customer'}</h3>
               <p className="text-[10px] text-brand-primary font-bold uppercase tracking-widest mt-1">
-                {profile?.role || 'Valued'} Member
+                {user ? `${profile?.role || 'Valued'} Member` : 'Local Test Mode'}
               </p>
             </div>
 
@@ -133,13 +142,23 @@ export default function Profile({ id }: { id?: string }) {
               <ChevronRight size={14} />
             </button>
 
-            <button 
-              onClick={logout}
-              className="w-full flex items-center gap-3 p-4 rounded-2xl text-red-500 border border-red-100 hover:bg-red-50 transition-all mt-8"
-            >
-              <LogOut size={20} />
-              <span className="font-medium">Sign Out</span>
-            </button>
+            {user ? (
+              <button 
+                onClick={logout}
+                className="w-full flex items-center gap-3 p-4 rounded-2xl text-red-500 border border-red-100 hover:bg-red-50 transition-all mt-8"
+              >
+                <LogOut size={20} />
+                <span className="font-medium">Sign Out</span>
+              </button>
+            ) : (
+              <button 
+                onClick={signIn}
+                className="w-full flex items-center gap-3 p-4 rounded-2xl text-brand-primary border border-brand-border hover:bg-brand-cream transition-all mt-8"
+              >
+                <UserIcon size={20} />
+                <span className="font-medium">Sign In to Sync</span>
+              </button>
+            )}
           </aside>
 
           {/* Content */}

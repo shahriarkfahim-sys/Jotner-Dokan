@@ -1,7 +1,7 @@
 import React, { useMemo, useState } from 'react';
 import { useCart } from '../context/CartContext';
 import { useAuth } from '../context/AuthContext';
-import { db, handleFirestoreError, OperationType } from '../lib/firebase';
+import { db } from '../lib/firebase';
 import { addDoc, collection } from 'firebase/firestore';
 import { Link, useNavigate } from 'react-router-dom';
 import { CheckCircle2, CreditCard, ShieldCheck, Truck } from 'lucide-react';
@@ -9,6 +9,20 @@ import { CheckCircle2, CreditCard, ShieldCheck, Truck } from 'lucide-react';
 const SHIPPING_FEE = 100;
 const VAT_RATE = 0.1;
 const formatTk = (amount: number) => `Tk ${amount.toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
+const LOCAL_ORDERS_KEY = 'jotnerLocalOrders';
+
+function getLocalCustomerId() {
+  const existing = localStorage.getItem('jotnerLocalCustomerId');
+  if (existing) return existing;
+  const id = `guest-${Date.now()}`;
+  localStorage.setItem('jotnerLocalCustomerId', id);
+  return id;
+}
+
+function saveLocalOrder(order: any) {
+  const saved = JSON.parse(localStorage.getItem(LOCAL_ORDERS_KEY) || '[]');
+  localStorage.setItem(LOCAL_ORDERS_KEY, JSON.stringify([order, ...saved]));
+}
 
 export default function Checkout({ id }: { id?: string }) {
   const { items, total, clearCart } = useCart();
@@ -40,17 +54,15 @@ export default function Checkout({ id }: { id?: string }) {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!user) {
-      await signIn();
-      return;
-    }
     if (items.length === 0) return;
 
     setLoading(true);
     try {
       const createdAt = Date.now();
+      const localId = `local-${createdAt}`;
       const orderData = {
-        userId: user.uid,
+        id: localId,
+        userId: user?.uid || getLocalCustomerId(),
         items,
         subtotal: total,
         shippingFee: SHIPPING_FEE,
@@ -89,15 +101,26 @@ export default function Checkout({ id }: { id?: string }) {
         createdAt,
       };
       
-      const orderRef = await addDoc(collection(db, 'orders'), orderData);
-      await addDoc(collection(db, 'notifications'), {
-        userId: user.uid,
-        orderId: orderRef.id,
-        title: 'Order confirmed',
-        message: `Your Jotner Dokan order ${orderData.trackingNumber} has been placed successfully.`,
-        read: false,
-        createdAt,
-      });
+      let savedOrderId = localId;
+      try {
+        if (user) {
+          const orderRef = await addDoc(collection(db, 'orders'), orderData);
+          savedOrderId = orderRef.id;
+          await addDoc(collection(db, 'notifications'), {
+            userId: user.uid,
+            orderId: orderRef.id,
+            title: 'Order confirmed',
+            message: `Your Jotner Dokan order ${orderData.trackingNumber} has been placed successfully.`,
+            read: false,
+            createdAt,
+          });
+        } else {
+          saveLocalOrder(orderData);
+        }
+      } catch (error) {
+        console.warn('Saving order locally because Firebase is not available on this host:', error);
+        saveLocalOrder(orderData);
+      }
 
       if ('Notification' in window && Notification.permission === 'granted') {
         new Notification('Jotner Dokan order confirmed', {
@@ -108,14 +131,14 @@ export default function Checkout({ id }: { id?: string }) {
       }
 
       sessionStorage.setItem('lastOrderNotification', JSON.stringify({
-        id: orderRef.id,
+        id: savedOrderId,
         trackingNumber: orderData.trackingNumber,
       }));
-      setOrderComplete(orderRef.id);
+      setOrderComplete(savedOrderId);
       clearCart();
       setTimeout(() => navigate('/profile'), 1200);
     } catch (error) {
-      handleFirestoreError(error, OperationType.CREATE, 'orders');
+      console.error('Order could not be completed:', error);
     } finally {
       setLoading(false);
     }
@@ -145,9 +168,9 @@ export default function Checkout({ id }: { id?: string }) {
 
         {!user && (
           <div className="mb-8 flex flex-col gap-3 border border-brand-sand bg-brand-cream p-5 sm:flex-row sm:items-center sm:justify-between">
-            <p className="font-bold text-brand-olive">Sign in before placing the order so you can track delivery from your account.</p>
+            <p className="font-bold text-brand-olive">Local checkout is enabled. Sign in is optional for testing; signed-in orders sync to your account.</p>
             <button onClick={signIn} className="bg-black px-8 py-3 text-sm font-black uppercase tracking-widest text-white">
-              Sign In
+              Sign In with Google
             </button>
           </div>
         )}
@@ -320,7 +343,7 @@ export default function Checkout({ id }: { id?: string }) {
                 <p>3. By clicking Place Order, you agree to Jotner Dokan's terms and delivery policy.</p>
               </div>
 
-              <button type="submit" disabled={loading || !user || items.length === 0} className="mt-8 w-full bg-black py-4 text-sm font-black uppercase tracking-widest text-white transition-colors hover:bg-brand-secondary disabled:opacity-50">
+              <button type="submit" disabled={loading || items.length === 0} className="mt-8 w-full bg-black py-4 text-sm font-black uppercase tracking-widest text-white transition-colors hover:bg-brand-secondary disabled:opacity-50">
                 {loading ? 'Placing Order...' : 'Place Order'}
               </button>
 

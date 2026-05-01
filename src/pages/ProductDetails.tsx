@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { useParams, Link } from 'react-router-dom';
+import { useParams, Link, useNavigate } from 'react-router-dom';
 import { db, handleFirestoreError, OperationType } from '../lib/firebase';
 import { doc, getDoc, collection, query, orderBy, getDocs, addDoc } from 'firebase/firestore';
 import { Product, Review, ArtisanProfile } from '../types';
@@ -15,6 +15,7 @@ const SIZE_OPTIONS = ['Standard', 'Small', 'Medium', 'Large'];
 
 export default function ProductDetails({ id: pageId }: { id?: string }) {
   const { id } = useParams<{ id: string }>();
+  const navigate = useNavigate();
   const [product, setProduct] = useState<Product | null>(null);
   const [artisan, setArtisan] = useState<ArtisanProfile | null>(null);
   const [reviews, setReviews] = useState<Review[]>([]);
@@ -195,7 +196,10 @@ export default function ProductDetails({ id: pageId }: { id?: string }) {
 
             <div className="flex flex-col sm:flex-row gap-4 mb-12">
               <button 
-                onClick={() => addToCart(product, { size: selectedSize, quantity: selectedQuantity })}
+                onClick={() => {
+                  addToCart(product, { size: selectedSize, quantity: selectedQuantity });
+                  navigate('/cart');
+                }}
                 className="flex-[2] btn-olive py-4 flex items-center justify-center gap-3"
               >
                 <ShoppingCart size={20} />

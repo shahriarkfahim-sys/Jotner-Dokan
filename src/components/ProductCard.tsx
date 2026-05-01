@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Heart, ShoppingCart, BarChart2, Star } from 'lucide-react';
 import { Product } from '../types';
 import { useCart } from '../context/CartContext';
@@ -12,6 +12,7 @@ const SIZE_OPTIONS = ['Standard', 'Small', 'Medium', 'Large'];
 
 export default function ProductCard({ product }: { product: Product, key?: React.Key }) {
   const { addToCart } = useCart();
+  const navigate = useNavigate();
   const { user } = useAuth();
   const { addToCompare } = useCompare();
   const [isWishlisted, setIsWishlisted] = useState(false);
@@ -152,7 +153,11 @@ export default function ProductCard({ product }: { product: Product, key?: React
       </div>
 
       <button
-        onClick={(e) => { e.preventDefault(); addToCart(product, { size, quantity }); }}
+        onClick={(e) => {
+          e.preventDefault();
+          addToCart(product, { size, quantity });
+          navigate('/cart');
+        }}
         className="mt-2 w-full bg-white border border-slate-200 text-slate-600 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-brand-primary hover:text-white hover:border-brand-primary transition-all active:scale-95"
       >
         Add to Bag

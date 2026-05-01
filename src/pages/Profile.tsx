@@ -3,9 +3,11 @@ import React, { useState, useEffect } from 'react';
 import { db, handleFirestoreError, OperationType } from '../lib/firebase';
 import { collection, query, where, getDocs, orderBy } from 'firebase/firestore';
 import { Order, Product } from '../types';
-import { Package, Heart, User as UserIcon, LogOut, ChevronRight } from 'lucide-react';
+import { CheckCircle2, Package, Heart, User as UserIcon, LogOut, ChevronRight } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import ProductCard from '../components/ProductCard';
+
+const formatTk = (amount: number) => `Tk ${amount.toLocaleString('en-BD', { minimumFractionDigits: 2, maximumFractionDigits: 2 })}`;
 
 export default function Profile({ id }: { id?: string }) {
   const { user, profile, logout, signIn } = useAuth();
@@ -13,6 +15,15 @@ export default function Profile({ id }: { id?: string }) {
   const [wishlistProducts, setWishlistProducts] = useState<Product[]>([]);
   const [activeTab, setActiveTab] = useState<'orders' | 'wishlist' | 'profile'>('orders');
   const [loading, setLoading] = useState(true);
+  const [orderNotice, setOrderNotice] = useState<{ id: string; trackingNumber: string } | null>(null);
+
+  useEffect(() => {
+    const notice = sessionStorage.getItem('lastOrderNotification');
+    if (notice) {
+      setOrderNotice(JSON.parse(notice));
+      sessionStorage.removeItem('lastOrderNotification');
+    }
+  }, []);
 
   useEffect(() => {
     if (!user) {
@@ -133,6 +144,15 @@ export default function Profile({ id }: { id?: string }) {
 
           {/* Content */}
           <main className="flex-grow">
+            {orderNotice && (
+              <div className="mb-8 flex items-start gap-3 rounded-2xl border border-green-200 bg-green-50 p-5 text-green-800">
+                <CheckCircle2 size={24} className="mt-0.5 shrink-0" />
+                <div>
+                  <p className="font-bold">Your order is complete.</p>
+                  <p className="text-sm">Tracking number: {orderNotice.trackingNumber}. You can follow the order condition below.</p>
+                </div>
+              </div>
+            )}
             <AnimatePresence mode="wait">
               {activeTab === 'orders' && (
                 <motion.div 
@@ -155,7 +175,10 @@ export default function Profile({ id }: { id?: string }) {
                               {order.status}
                             </span>
                           </div>
-                          <p className="text-sm text-neutral-400 mb-4">Placed on {new Date(order.createdAt).toLocaleDateString()}</p>
+                          <p className="text-sm text-neutral-400 mb-2">Placed on {new Date(order.createdAt).toLocaleDateString()}</p>
+                          {order.trackingNumber && (
+                            <p className="text-sm font-bold text-brand-olive mb-4">Tracking: {order.trackingNumber}</p>
+                          )}
                           <div className="flex gap-2">
                              {order.items.map((item, idx) => (
                                <div key={idx} className="w-12 h-12 rounded-lg bg-brand-sand overflow-hidden border border-brand-sand">
@@ -163,9 +186,31 @@ export default function Profile({ id }: { id?: string }) {
                                </div>
                              ))}
                           </div>
+                          <div className="mt-6 grid grid-cols-2 md:grid-cols-5 gap-2">
+                            {(order.timeline || [
+                              { label: 'Order placed', complete: true },
+                              { label: 'Payment review', complete: order.paymentStatus === 'paid' || order.paymentMethod === 'cash-on-delivery' },
+                              { label: 'Processing', complete: ['processing', 'shipped', 'delivered'].includes(order.status) },
+                              { label: 'Shipped', complete: ['shipped', 'delivered'].includes(order.status) },
+                              { label: 'Delivered', complete: order.status === 'delivered' },
+                            ]).map((step, idx) => (
+                              <div key={`${order.id}-${idx}`} className="flex items-center gap-2">
+                                <span className={`h-3 w-3 rounded-full ${step.complete ? 'bg-brand-primary' : 'bg-slate-200'}`} />
+                                <span className={`text-[10px] font-bold uppercase tracking-widest ${step.complete ? 'text-brand-olive' : 'text-slate-400'}`}>{step.label}</span>
+                              </div>
+                            ))}
+                          </div>
                         </div>
                         <div className="md:text-right flex flex-col justify-between">
-                           <div className="text-2xl font-serif text-brand-olive">${order.totalAmount.toFixed(2)}</div>
+                           <div>
+                             <div className="text-2xl font-serif text-brand-olive">{formatTk(order.totalAmount)}</div>
+                             <p className="mt-2 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                               {order.paymentMethod === 'bkash' ? 'bKash' : 'Cash on Delivery'}
+                             </p>
+                             <p className="mt-1 text-[10px] font-bold uppercase tracking-widest text-slate-400">
+                               Payment: {order.paymentStatus || 'pending'}
+                             </p>
+                           </div>
                            <button className="text-xs text-brand-clay font-bold underline hover:text-brand-olive transition-colors mt-4">Order Details</button>
                         </div>
                       </div>

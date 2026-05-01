@@ -3,9 +3,10 @@ import { CartItem, Product } from '../types';
 
 interface CartContextType {
   items: CartItem[];
-  addToCart: (product: Product) => void;
-  removeFromCart: (productId: string) => void;
-  updateQuantity: (productId: string, quantity: number) => void;
+  addToCart: (product: Product, options?: { size?: string; quantity?: number }) => void;
+  removeFromCart: (cartKey: string) => void;
+  updateQuantity: (cartKey: string, quantity: number) => void;
+  updateSize: (cartKey: string, size: string) => void;
   clearCart: () => void;
   total: number;
   itemCount: number;
@@ -19,7 +20,16 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     const savedCart = localStorage.getItem('cart');
     if (savedCart) {
-      setItems(JSON.parse(savedCart));
+      const parsed = JSON.parse(savedCart) as Partial<CartItem>[];
+      setItems(parsed.map((item) => {
+        const size = item.size || 'Standard';
+        return {
+          ...(item as CartItem),
+          size,
+          cartKey: item.cartKey || `${item.id}_${size}`,
+          quantity: item.quantity || 1,
+        };
+      }));
     }
   }, []);
 
@@ -27,30 +37,51 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     localStorage.setItem('cart', JSON.stringify(items));
   }, [items]);
 
-  const addToCart = (product: Product) => {
+  const addToCart = (product: Product, options: { size?: string; quantity?: number } = {}) => {
+    const size = options.size || 'Standard';
+    const quantity = Math.max(1, options.quantity || 1);
+    const cartKey = `${product.id}_${size}`;
+
     setItems((prev) => {
-      const existing = prev.find((i) => i.id === product.id);
+      const existing = prev.find((i) => i.cartKey === cartKey);
       if (existing) {
         return prev.map((i) =>
-          i.id === product.id ? { ...i, quantity: i.quantity + 1 } : i
+          i.cartKey === cartKey ? { ...i, quantity: i.quantity + quantity } : i
         );
       }
-      return [...prev, { ...product, quantity: 1 }];
+      return [...prev, { ...product, quantity, size, cartKey }];
     });
   };
 
-  const removeFromCart = (productId: string) => {
-    setItems((prev) => prev.filter((i) => i.id !== productId));
+  const removeFromCart = (cartKey: string) => {
+    setItems((prev) => prev.filter((i) => i.cartKey !== cartKey));
   };
 
-  const updateQuantity = (productId: string, quantity: number) => {
+  const updateQuantity = (cartKey: string, quantity: number) => {
     if (quantity <= 0) {
-      removeFromCart(productId);
+      removeFromCart(cartKey);
       return;
     }
     setItems((prev) =>
-      prev.map((i) => (i.id === productId ? { ...i, quantity } : i))
+      prev.map((i) => (i.cartKey === cartKey ? { ...i, quantity } : i))
     );
+  };
+
+  const updateSize = (cartKey: string, size: string) => {
+    setItems((prev) => {
+      const item = prev.find((i) => i.cartKey === cartKey);
+      if (!item) return prev;
+
+      const nextKey = `${item.id}_${size}`;
+      const duplicate = prev.find((i) => i.cartKey === nextKey);
+      if (duplicate) {
+        return prev
+          .filter((i) => i.cartKey !== cartKey)
+          .map((i) => i.cartKey === nextKey ? { ...i, quantity: i.quantity + item.quantity } : i);
+      }
+
+      return prev.map((i) => i.cartKey === cartKey ? { ...i, size, cartKey: nextKey } : i);
+    });
   };
 
   const clearCart = () => setItems([]);
@@ -60,7 +91,7 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <CartContext.Provider
-      value={{ items, addToCart, removeFromCart, updateQuantity, clearCart, total, itemCount }}
+      value={{ items, addToCart, removeFromCart, updateQuantity, updateSize, clearCart, total, itemCount }}
     >
       {children}
     </CartContext.Provider>

@@ -8,12 +8,16 @@ import { useCompare } from '../context/ComparisonContext';
 import { db, handleFirestoreError, OperationType } from '../lib/firebase';
 import { doc, setDoc, deleteDoc, getDoc } from 'firebase/firestore';
 
+const SIZE_OPTIONS = ['Standard', 'Small', 'Medium', 'Large'];
+
 export default function ProductCard({ product }: { product: Product, key?: React.Key }) {
   const { addToCart } = useCart();
   const { user } = useAuth();
   const { addToCompare } = useCompare();
   const [isWishlisted, setIsWishlisted] = useState(false);
   const [artisanName, setArtisanName] = useState<string>('');
+  const [size, setSize] = useState('Standard');
+  const [quantity, setQuantity] = useState(1);
 
   useEffect(() => {
     async function load() {
@@ -123,9 +127,33 @@ export default function ProductCard({ product }: { product: Product, key?: React
         <span className="text-[10px] font-bold text-slate-400">({product.reviewCount || 0} reviews)</span>
       </div>
       
-      <button 
-        onClick={(e) => { e.preventDefault(); addToCart(product); }}
-        className="mt-4 w-full bg-white border border-slate-200 text-slate-600 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-brand-primary hover:text-white hover:border-brand-primary transition-all active:scale-95"
+      <div className="mt-4 grid grid-cols-[1fr_72px] gap-2">
+        <label className="sr-only" htmlFor={`size-${product.id}`}>Size</label>
+        <select
+          id={`size-${product.id}`}
+          value={size}
+          onChange={(e) => setSize(e.target.value)}
+          className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-xs font-bold uppercase tracking-widest text-slate-500 outline-none focus:border-brand-primary"
+        >
+          {SIZE_OPTIONS.map(option => (
+            <option key={option}>{option}</option>
+          ))}
+        </select>
+        <label className="sr-only" htmlFor={`qty-${product.id}`}>Quantity</label>
+        <input
+          id={`qty-${product.id}`}
+          type="number"
+          min={1}
+          max={product.stock}
+          value={quantity}
+          onChange={(e) => setQuantity(Math.max(1, Number(e.target.value) || 1))}
+          className="h-10 rounded-xl border border-slate-200 bg-white px-3 text-center text-xs font-bold text-slate-600 outline-none focus:border-brand-primary"
+        />
+      </div>
+
+      <button
+        onClick={(e) => { e.preventDefault(); addToCart(product, { size, quantity }); }}
+        className="mt-2 w-full bg-white border border-slate-200 text-slate-600 py-2.5 rounded-xl text-xs font-bold uppercase tracking-widest hover:bg-brand-primary hover:text-white hover:border-brand-primary transition-all active:scale-95"
       >
         Add to Bag
       </button>

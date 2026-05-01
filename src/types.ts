@@ -68,6 +68,8 @@ export interface WishlistItem {
 
 export interface CartItem extends Product {
   quantity: number;
+  size: string;
+  cartKey: string;
 }
 
 export interface Order {
@@ -75,14 +77,36 @@ export interface Order {
   userId: string;
   items: CartItem[];
   totalAmount: number;
-  status: 'pending' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  subtotal?: number;
+  shippingFee?: number;
+  vat?: number;
+  status: 'pending' | 'confirmed' | 'processing' | 'shipped' | 'delivered' | 'cancelled';
+  paymentMethod?: 'cash-on-delivery' | 'bkash';
+  paymentStatus?: 'pending' | 'submitted' | 'paid';
+  paymentDetails?: {
+    bkashNumber?: string;
+    transactionId?: string;
+  };
+  customer?: {
+    email: string;
+    firstName: string;
+    lastName: string;
+    mobile: string;
+  };
   trackingNumber?: string;
+  deliveryInstructions?: string;
   shippingAddress: {
     street: string;
+    street2?: string;
     city: string;
     state: string;
     zip: string;
     country: string;
   };
   createdAt: number;
+  timeline?: Array<{
+    label: string;
+    timestamp: number;
+    complete: boolean;
+  }>;
 }

@@ -11,6 +11,8 @@ import { getProductRecommendations } from '../lib/gemini';
 import ProductCard from '../components/ProductCard';
 import { getAllProducts, getProductById } from '../services/productService';
 
+const SIZE_OPTIONS = ['Standard', 'Small', 'Medium', 'Large'];
+
 export default function ProductDetails({ id: pageId }: { id?: string }) {
   const { id } = useParams<{ id: string }>();
   const [product, setProduct] = useState<Product | null>(null);
@@ -20,6 +22,8 @@ export default function ProductDetails({ id: pageId }: { id?: string }) {
   const [loading, setLoading] = useState(true);
   const { addToCart } = useCart();
   const { user } = useAuth();
+  const [selectedSize, setSelectedSize] = useState('Standard');
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
   
   const [newReview, setNewReview] = useState({ rating: 5, comment: '' });
   const [isSubmittingReview, setIsSubmittingReview] = useState(false);
@@ -142,6 +146,32 @@ export default function ProductDetails({ id: pageId }: { id?: string }) {
               {product.description}
             </p>
 
+            <div className="grid grid-cols-1 sm:grid-cols-[1fr_160px] gap-4 mb-10">
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Size</label>
+                <select
+                  value={selectedSize}
+                  onChange={(e) => setSelectedSize(e.target.value)}
+                  className="w-full bg-white border border-brand-sand rounded-xl px-4 py-3 text-sm font-bold text-brand-olive outline-none focus:border-brand-primary"
+                >
+                  {SIZE_OPTIONS.map(size => (
+                    <option key={size}>{size}</option>
+                  ))}
+                </select>
+              </div>
+              <div>
+                <label className="block text-[10px] font-bold uppercase tracking-widest text-neutral-400 mb-2">Quantity</label>
+                <input
+                  type="number"
+                  min={1}
+                  max={product.stock}
+                  value={selectedQuantity}
+                  onChange={(e) => setSelectedQuantity(Math.max(1, Number(e.target.value) || 1))}
+                  className="w-full bg-white border border-brand-sand rounded-xl px-4 py-3 text-sm font-bold text-brand-olive outline-none focus:border-brand-primary"
+                />
+              </div>
+            </div>
+
             <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
               <div className="flex items-start gap-3">
                 <div className="p-2 bg-brand-olive/10 rounded-lg text-brand-olive">
@@ -165,7 +195,7 @@ export default function ProductDetails({ id: pageId }: { id?: string }) {
 
             <div className="flex flex-col sm:flex-row gap-4 mb-12">
               <button 
-                onClick={() => addToCart(product)}
+                onClick={() => addToCart(product, { size: selectedSize, quantity: selectedQuantity })}
                 className="flex-[2] btn-olive py-4 flex items-center justify-center gap-3"
               >
                 <ShoppingCart size={20} />

@@ -97,8 +97,15 @@ export default function Admin({ id }: { id?: string }) {
   const updateOrderStatus = async (orderId: string, status: Order['status']) => {
     try {
       const docRef = doc(db, 'orders', orderId);
-      await updateDoc(docRef, { status });
-      setOrders(orders.map(o => o.id === orderId ? { ...o, status } : o));
+      const timeline = [
+        { label: 'Order placed', timestamp: Date.now(), complete: true },
+        { label: 'Payment review', timestamp: Date.now(), complete: ['confirmed', 'processing', 'shipped', 'delivered'].includes(status) },
+        { label: 'Processing', timestamp: Date.now(), complete: ['processing', 'shipped', 'delivered'].includes(status) },
+        { label: 'Shipped', timestamp: Date.now(), complete: ['shipped', 'delivered'].includes(status) },
+        { label: 'Delivered', timestamp: Date.now(), complete: status === 'delivered' },
+      ];
+      await updateDoc(docRef, { status, timeline });
+      setOrders(orders.map(o => o.id === orderId ? { ...o, status, timeline } : o));
     } catch (error) {
       handleFirestoreError(error, OperationType.UPDATE, `orders/${orderId}`);
     }
@@ -332,10 +339,10 @@ export default function Admin({ id }: { id?: string }) {
                     </div>
                     <div className="text-xl font-serif font-bold text-brand-clay">${order.totalAmount.toFixed(2)}</div>
                     <div className="flex gap-2">
-                       {['pending', 'processing', 'shipped', 'delivered'].map(status => (
+                       {['confirmed', 'processing', 'shipped', 'delivered'].map(status => (
                          <button 
                            key={status}
-                           onClick={() => updateOrderStatus(order.id, status as any)}
+                           onClick={() => updateOrderStatus(order.id, status as Order['status'])}
                            className={`px-4 py-2 rounded-full text-[10px] font-bold uppercase tracking-widest transition-all ${order.status === status ? 'bg-brand-olive text-white shadow-md' : 'bg-brand-sand/50 text-neutral-500 hover:bg-brand-sand'}`}
                          >
                            {status}

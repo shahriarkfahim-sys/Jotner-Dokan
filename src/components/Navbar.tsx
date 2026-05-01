@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom';
-import { ShoppingCart, Heart, User, Search, Menu } from 'lucide-react';
+import { ShoppingCart, Heart, Menu } from 'lucide-react';
 import { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useAuth } from '../context/AuthContext';
@@ -9,14 +9,12 @@ export default function Navbar({ id }: { id?: string }) {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
   return (
-    <nav id={id} className="sticky top-0 z-50 bg-white border-b border-slate-100 shadow-sm">
+    <nav id={id} className="sticky top-0 z-50 bg-white border-b border-brand-border shadow-sm">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex justify-between items-center h-16">
           {/* Logo */}
           <Link to="/" className="flex items-center gap-2 group">
-            <h1 className="text-xl font-bold tracking-tight text-slate-900">
-              AbleHands<span className="text-brand-primary">.</span>
-            </h1>
+            <img src="/assets/brand/jotner-dokan-logo.png" alt="Jotner Dokan" className="h-10 w-auto object-contain" />
           </Link>
 
           {/* Desktop Nav */}
@@ -26,7 +24,7 @@ export default function Navbar({ id }: { id?: string }) {
             <Link to="/stories" className="text-sm font-medium text-slate-500 hover:text-brand-primary transition-colors">Stories</Link>
             
             {user && (
-              <Link to="/admin" className="text-sm font-bold text-brand-primary hover:text-brand-primary/80 transition-colors bg-indigo-50 px-3 py-1 rounded-lg">Admin</Link>
+              <Link to="/admin" className="text-sm font-bold text-brand-primary hover:text-brand-primary/80 transition-colors bg-brand-primary/10 px-3 py-1 rounded-lg">Admin</Link>
             )}
             
             <div className="h-4 w-[1px] bg-slate-200"></div>
@@ -45,7 +43,7 @@ export default function Navbar({ id }: { id?: string }) {
                   {user.photoURL ? (
                     <img src={user.photoURL} alt={user.displayName || 'User'} className="w-8 h-8 rounded-full border border-slate-200 shadow-sm hover:scale-105 transition-transform" referrerPolicy="no-referrer" />
                   ) : (
-                    <div className="w-8 h-8 rounded-full bg-indigo-100 border border-indigo-200 flex items-center justify-center text-brand-primary font-bold text-xs hover:bg-brand-primary hover:text-white transition-all">
+                    <div className="w-8 h-8 rounded-full bg-brand-primary/10 border border-brand-border flex items-center justify-center text-brand-primary font-bold text-xs hover:bg-brand-primary hover:text-white transition-all">
                       {user.displayName ? user.displayName.charAt(0).toUpperCase() : 'U'}
                     </div>
                   )}

@@ -59,17 +59,17 @@ const PRODUCTS = [
   { name: 'Hammered Silver Bangle', category: 'Jewelry', price: 65, artisanIdx: 2, image: 'https://images.unsplash.com/photo-1515562141207-7a88fb7ce338?auto=format&fit=crop&w=800' },
   { name: 'Obsidian Pendant', category: 'Jewelry', price: 49, artisanIdx: 2, image: 'https://images.unsplash.com/photo-1602810318383-e386cc2a3ccf?auto=format&fit=crop&w=800' },
 
-  // Daily Me
-  { name: 'Canvas Tote with Braille', category: 'Daily Me', price: 25, artisanIdx: 1, image: 'https://images.unsplash.com/photo-1544816153-097305566a5a?auto=format&fit=crop&w=800' },
-  { name: 'Recycled Leather Wallet', category: 'Daily Me', price: 38, artisanIdx: 0, image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800' },
-  { name: 'Handwoven Journal', category: 'Daily Me', price: 32, artisanIdx: 1, image: 'https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=800' },
-  { name: 'Ceramic Travel Mug', category: 'Daily Me', price: 28, artisanIdx: 0, image: 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=800' },
-  { name: 'Artisan Soap Sampler', category: 'Daily Me', price: 18, artisanIdx: 2, image: 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?auto=format&fit=crop&w=800' },
-  { name: 'Linen Market Bag', category: 'Daily Me', price: 22, artisanIdx: 1, image: 'https://images.unsplash.com/photo-1591348122449-025211803752?auto=format&fit=crop&w=800' },
-  { name: 'Wooden Desk Organizer', category: 'Daily Me', price: 45, artisanIdx: 0, image: 'https://images.unsplash.com/photo-1591129841117-3adfd313e34f?auto=format&fit=crop&w=800' },
-  { name: 'Knitted Phone Pouch', category: 'Daily Me', price: 15, artisanIdx: 1, image: 'https://images.unsplash.com/photo-1604537372136-23b0a701740h?auto=format&fit=crop&w=800' },
-  { name: 'Herbal Eye Mask', category: 'Daily Me', price: 20, artisanIdx: 1, image: 'https://images.unsplash.com/photo-1590602847861-f357a9302105?auto=format&fit=crop&w=800' },
-  { name: 'Sustainable Water Bottle Sleeve', category: 'Daily Me', price: 12, artisanIdx: 1, image: 'https://images.unsplash.com/photo-1602143399827-7dc9469615c6?auto=format&fit=crop&w=800' },
+  // Daily Use
+  { name: 'Canvas Tote with Braille', category: 'Daily Use', price: 25, artisanIdx: 1, image: 'https://images.unsplash.com/photo-1544816153-097305566a5a?auto=format&fit=crop&w=800' },
+  { name: 'Recycled Leather Wallet', category: 'Daily Use', price: 38, artisanIdx: 0, image: 'https://images.unsplash.com/photo-1627123424574-724758594e93?auto=format&fit=crop&w=800' },
+  { name: 'Handwoven Journal', category: 'Daily Use', price: 32, artisanIdx: 1, image: 'https://images.unsplash.com/photo-1531346878377-a5be20888e57?auto=format&fit=crop&w=800' },
+  { name: 'Ceramic Travel Mug', category: 'Daily Use', price: 28, artisanIdx: 0, image: 'https://images.unsplash.com/photo-1514228742587-6b1558fcca3d?auto=format&fit=crop&w=800' },
+  { name: 'Artisan Soap Sampler', category: 'Daily Use', price: 18, artisanIdx: 2, image: 'https://images.unsplash.com/photo-1600857544200-b2f666a9a2ec?auto=format&fit=crop&w=800' },
+  { name: 'Linen Market Bag', category: 'Daily Use', price: 22, artisanIdx: 1, image: 'https://images.unsplash.com/photo-1591348122449-025211803752?auto=format&fit=crop&w=800' },
+  { name: 'Wooden Desk Organizer', category: 'Daily Use', price: 45, artisanIdx: 0, image: 'https://images.unsplash.com/photo-1591129841117-3adfd313e34f?auto=format&fit=crop&w=800' },
+  { name: 'Knitted Phone Pouch', category: 'Daily Use', price: 15, artisanIdx: 1, image: 'https://images.unsplash.com/photo-1604537372136-23b0a701740h?auto=format&fit=crop&w=800' },
+  { name: 'Herbal Eye Mask', category: 'Daily Use', price: 20, artisanIdx: 1, image: 'https://images.unsplash.com/photo-1590602847861-f357a9302105?auto=format&fit=crop&w=800' },
+  { name: 'Sustainable Water Bottle Sleeve', category: 'Daily Use', price: 12, artisanIdx: 1, image: 'https://images.unsplash.com/photo-1602143399827-7dc9469615c6?auto=format&fit=crop&w=800' },
 ];
 
 export async function seedDemoData() {

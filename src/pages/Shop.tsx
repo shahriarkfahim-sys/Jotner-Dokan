@@ -5,7 +5,7 @@ import { getAllProducts } from '../services/productService';
 import ProductCard from '../components/ProductCard';
 import { motion, AnimatePresence } from 'motion/react';
 
-const CATEGORIES = ['All', 'Home Decor', 'Jewelry', 'Daily Me'];
+const CATEGORIES = ['All', 'Home Decor', 'Jewelry', 'Daily Use'];
 
 export default function Shop({ id }: { id?: string }) {
   const [products, setProducts] = useState<Product[]>([]);
@@ -39,7 +39,7 @@ export default function Shop({ id }: { id?: string }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <header className="mb-12">
           <h1 className="text-5xl font-serif text-brand-olive mb-4">The Collection</h1>
-          <p className="text-neutral-500 max-w-xl">Browse our curated selection of unique handmade crafts, each piece carrying the soul and story of its creator.</p>
+          <p className="text-neutral-500 max-w-xl">Browse eco-friendly home decor, daily-use pieces, and meaningful gifts created through Jotner Dokan's inclusive marketplace.</p>
         </header>
 
         {/* Toolbar */}

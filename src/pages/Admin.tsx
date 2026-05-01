@@ -255,7 +255,7 @@ export default function Admin({ id }: { id?: string }) {
                       >
                         <option>Home Decor</option>
                         <option>Jewelry</option>
-                        <option>Daily Me</option>
+                        <option>Daily Use</option>
                       </select>
                     <input 
                       type="url" 

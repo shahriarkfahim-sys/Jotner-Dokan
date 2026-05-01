@@ -9,6 +9,7 @@ import { Star, ShoppingCart, Heart, Truck, ShieldCheck, MapPin, Quote } from 'lu
 import { motion, AnimatePresence } from 'motion/react';
 import { getProductRecommendations } from '../lib/gemini';
 import ProductCard from '../components/ProductCard';
+import { getAllProducts, getProductById } from '../services/productService';
 
 export default function ProductDetails({ id: pageId }: { id?: string }) {
   const { id } = useParams<{ id: string }>();
@@ -27,10 +28,8 @@ export default function ProductDetails({ id: pageId }: { id?: string }) {
     async function loadProduct() {
       if (!id) return;
       try {
-        const docRef = doc(db, 'products', id);
-        const snap = await getDoc(docRef);
-        if (snap.exists()) {
-          const productData = { id: snap.id, ...snap.data() } as Product;
+        const productData = await getProductById(id);
+        if (productData) {
           setProduct(productData);
           
           // Load Artisan
@@ -42,14 +41,15 @@ export default function ProductDetails({ id: pageId }: { id?: string }) {
           }
           
           // Load reviews
-          const reviewsRef = collection(db, 'products', id, 'reviews');
-          const q = query(reviewsRef, orderBy('createdAt', 'desc'));
-          const reviewsSnap = await getDocs(q);
-          setReviews(reviewsSnap.docs.map(d => ({ id: d.id, ...d.data() } as Review)));
+          if (!productData.id.startsWith('jotner-')) {
+            const reviewsRef = collection(db, 'products', id, 'reviews');
+            const q = query(reviewsRef, orderBy('createdAt', 'desc'));
+            const reviewsSnap = await getDocs(q);
+            setReviews(reviewsSnap.docs.map(d => ({ id: d.id, ...d.data() } as Review)));
+          }
 
           // Get recommendations using Gemini
-          const allProductsSnap = await getDocs(collection(db, 'products'));
-          const allProducts = allProductsSnap.docs.map(d => ({ id: d.id, ...d.data() } as Product));
+          const allProducts = await getAllProducts();
           const recIds = await getProductRecommendations(
             `I like this product: ${productData.name}. Its category is ${productData.category}. ${productData.description}`,
             allProducts.filter(p => p.id !== id)

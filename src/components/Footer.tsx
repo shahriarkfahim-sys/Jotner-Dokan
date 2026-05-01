@@ -9,10 +9,10 @@ export default function Footer({ id }: { id?: string }) {
           {/* Brand */}
           <div className="space-y-6">
             <Link to="/" className="flex items-center gap-2 group">
-              <h3 className="text-xl font-bold tracking-tight text-slate-900">AbleHands<span className="text-brand-primary">.</span></h3>
+              <img src="/assets/brand/jotner-dokan-logo.png" alt="Jotner Dokan" className="h-14 w-auto object-contain" />
             </Link>
             <p className="text-sm text-slate-500 leading-relaxed">
-              Connecting you with refined, handmade treasures from artisans around the world. Every purchase supports a story of resilience.
+              Connecting opportunities for persons with disabilities through eco-friendly home decor, daily-use products, and meaningful gifts.
             </p>
           </div>
 
@@ -21,9 +21,9 @@ export default function Footer({ id }: { id?: string }) {
             <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6 font-sans">Marketplace</h4>
             <ul className="space-y-4 text-sm font-medium text-slate-600">
               <li><Link to="/shop" className="hover:text-brand-primary transition-colors">All Crafts</Link></li>
-              <li><Link to="/shop?category=pottery" className="hover:text-brand-primary transition-colors">Pottery & Ceramics</Link></li>
-              <li><Link to="/shop?category=textiles" className="hover:text-brand-primary transition-colors">Textiles & Weaving</Link></li>
-              <li><Link to="/shop?category=woodwork" className="hover:text-brand-primary transition-colors">Woodworking</Link></li>
+              <li><Link to="/shop?category=home-decor" className="hover:text-brand-primary transition-colors">Home Decor</Link></li>
+              <li><Link to="/shop?category=daily-use" className="hover:text-brand-primary transition-colors">Daily Use</Link></li>
+              <li><Link to="/shop?category=gifts" className="hover:text-brand-primary transition-colors">Purposeful Gifts</Link></li>
             </ul>
           </div>
 
@@ -32,9 +32,9 @@ export default function Footer({ id }: { id?: string }) {
             <h4 className="text-[10px] font-bold uppercase tracking-widest text-slate-400 mb-6 font-sans">Community</h4>
             <ul className="space-y-4 text-sm font-medium text-slate-600">
               <li><Link to="/stories" className="hover:text-brand-primary transition-colors">Artisan Stories</Link></li>
-              <li><Link to="/loyalty" className="hover:text-brand-primary transition-colors">Loyalty Program</Link></li>
-              <li><Link to="/blog" className="hover:text-brand-primary transition-colors">Craft Blog</Link></li>
-              <li><Link to="/contact" className="hover:text-brand-primary transition-colors">Contact Support</Link></li>
+              <li><Link to="/loyalty" className="hover:text-brand-primary transition-colors">Partnerships</Link></li>
+              <li><Link to="/blog" className="hover:text-brand-primary transition-colors">Impact Updates</Link></li>
+              <li><Link to="/contact" className="hover:text-brand-primary transition-colors">Contact</Link></li>
             </ul>
           </div>
 
@@ -70,7 +70,7 @@ export default function Footer({ id }: { id?: string }) {
         </div>
         
         <div className="pt-8 border-t border-slate-100 flex flex-col md:flex-row justify-between items-center gap-4">
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">© 2026 AbleHands Artisan Marketplace</p>
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">© 2026 Jotner Dokan Social Business</p>
           <div className="flex gap-8">
             <button className="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-slate-900 transition-colors">Privacy Policy</button>
             <button className="text-[10px] font-bold text-slate-400 uppercase tracking-widest hover:text-slate-900 transition-colors">Terms of Service</button>

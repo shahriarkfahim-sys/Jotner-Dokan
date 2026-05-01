@@ -18,6 +18,11 @@ export default function ProductCard({ product }: { product: Product, key?: React
   useEffect(() => {
     async function load() {
       try {
+        if (product.artisanId === 'jotner_collective') {
+          setArtisanName('Jotner Dokan Collective');
+          return;
+        }
+
         if (user) {
           const wishlistId = `${user.uid}_${product.id}`;
           const docRef = doc(db, 'wishlists', wishlistId);
